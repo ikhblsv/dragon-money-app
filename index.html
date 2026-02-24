@@ -3,224 +3,265 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dragon Plinko Hacker</title>
+    <title>Dragon Money Pro Hub</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold: #FFD700;
-            --dragon-red: #FF0000;
-            --bg-dark: #0a0a0a;
+            --red: #ff0000;
+            --gold: #ffcc00;
+            --bg: #0d0d0d;
+            --card: #1a1a1a;
+            --text: #ffffff;
+            --gray: #888;
+            --green: #00ff66;
         }
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: var(--bg-dark);
-            background-image: radial-gradient(circle at top, #330000 0%, #0a0a0a 100%);
-            color: white;
+            background: var(--bg);
+            color: var(--text);
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
-            text-align: center;
-        }
-
-        /* Видео-фон или шапка */
-        .hero-section {
-            width: 100%;
-            height: 200px;
-            background: url('https://img.freepik.com/free-vector/abstract-red-fire-flame-black-background_1017-31627.jpg') center/cover;
-            position: relative;
+            height: 100vh;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            border-bottom: 3px solid var(--dragon-red);
-            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3);
-        }
-
-        .hero-section video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.6;
-        }
-
-        .logo-overlay {
-            position: absolute;
-            font-weight: 900;
-            font-size: 28px;
-            color: var(--gold);
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 2px 2px 0px #000;
-            letter-spacing: 2px;
-        }
-
-        .container { padding: 20px; }
-
-        /* Стилизация сигналов как в боте @ChickenRoadHacker */
-        .radar-card {
-            background: rgba(30, 30, 30, 0.9);
-            border: 2px solid #333;
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            position: relative;
+            flex-direction: column;
             overflow: hidden;
         }
 
-        .radar-card::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(255, 0, 0, 0.2), transparent);
-            animation: rotate 4s linear infinite;
+        /* Шапка */
+        header {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #333;
+            background: rgba(13, 13, 13, 0.95);
+            z-index: 10;
         }
 
-        @keyframes rotate { 100% { transform: rotate(360deg); } }
+        .logo { font-weight: 800; font-size: 20px; color: var(--gold); letter-spacing: 1px; }
 
-        .signal-display {
-            position: relative;
-            z-index: 2;
-            font-size: 40px;
-            font-weight: 900;
-            color: var(--gold);
-            text-shadow: 0 0 15px var(--gold);
+        /* Контентная область */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: 100px;
         }
 
-        /* Кнопки */
-        .btn-play {
-            display: block;
-            background: linear-gradient(180deg, #FF4B4B 0%, #990000 100%);
+        .page { display: none; animation: fadeIn 0.3s ease; }
+        .page.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Карточки */
+        .card {
+            background: var(--card);
             border-radius: 15px;
             padding: 20px;
-            color: white;
-            font-weight: 900;
-            font-size: 18px;
-            text-decoration: none;
-            box-shadow: 0 5px 20px rgba(255, 0, 0, 0.5);
-            margin: 20px 0;
-            border: none;
-            cursor: pointer;
-            text-transform: uppercase;
+            margin-bottom: 15px;
+            border: 1px solid #262626;
         }
 
-        .promo-badge {
-            background: rgba(255, 215, 0, 0.1);
-            border: 1px dashed var(--gold);
-            padding: 10px;
-            border-radius: 10px;
-            color: var(--gold);
-            font-weight: bold;
-            display: inline-block;
-            margin-bottom: 20px;
-        }
-
-        /* Игровая сетка Plinko */
-        .plinko-preview {
-            display: flex;
-            justify-content: center;
-            gap: 5px;
-            margin-top: 15px;
-        }
-
-        .pocket {
-            width: 40px;
-            height: 30px;
+        /* Стили обучения */
+        .lesson-card {
             background: #222;
-            border-radius: 5px;
-            border: 1px solid #444;
-            font-size: 10px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            border-left: 4px solid var(--red);
+        }
+
+        .lesson-header {
+            padding: 15px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            color: #777;
+            cursor: pointer;
+            font-weight: 600;
         }
 
-        .pocket.active {
-            background: var(--dragon-red);
-            color: white;
-            box-shadow: 0 0 10px var(--dragon-red);
-            border-color: #fff;
+        .lesson-content {
+            padding: 0 15px 15px 15px;
+            display: none;
+            font-size: 14px;
+            color: #ccc;
+            line-height: 1.6;
+            border-top: 1px solid #333;
         }
 
+        .lesson-content.open { display: block; }
+
+        .step { margin-bottom: 10px; padding-left: 10px; border-left: 2px solid var(--gold); }
+
+        .play-now {
+            background: linear-gradient(90deg, var(--red), #800000);
+            padding: 18px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 800;
+            text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        /* Bottom Nav */
+        nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #141414;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid #333;
+            z-index: 100;
+        }
+
+        .nav-item { text-align: center; color: var(--gray); font-size: 10px; font-weight: 600; cursor: pointer; }
+        .nav-item.active { color: var(--gold); }
+        .nav-item svg { display: block; margin: 0 auto 5px; width: 24px; height: 24px; }
+
+        .signal-display {
+            background: radial-gradient(circle at center, #330000 0%, #1a1a1a 100%);
+            padding: 30px;
+            border: 2px solid var(--red);
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .val { font-size: 50px; font-weight: 900; color: var(--gold); text-shadow: 0 0 20px rgba(255,204,0,0.5); }
     </style>
 </head>
 <body>
 
-    <div class="hero-section">
-        <video autoplay muted loop playsinline>
-            <source src="https://static.videezy.com/system/resources/previews/000/038/544/original/fire_loop_4k.mp4" type="video/mp4">
-        </video>
-        <div class="logo-overlay">DRAGON HACKER</div>
-    </div>
+    <header><div class="logo">DRAGON HUB PRO</div></header>
 
-    <div class="container">
+    <div class="content-area">
         
-        <div class="promo-badge">🎁 ПРОМОКОД: BONUSDROP (ДО 1000₽)</div>
-
-        <div class="radar-card">
-            <div style="font-size: 12px; color: #aaa; margin-bottom: 10px; z-index: 2; position: relative;">SCANNED PLINKO ALGORITHM v4.2</div>
-            <div class="signal-display" id="signalText">ОЖИДАНИЕ...</div>
-            <div class="plinko-preview" id="pockets">
-                <div class="pocket">x0.2</div>
-                <div class="pocket">x0.5</div>
-                <div class="pocket active">x15</div>
-                <div class="pocket">x1.2</div>
-                <div class="pocket">x0.2</div>
+        <div id="signals" class="page active">
+            <div class="signal-display">
+                <div style="font-size: 11px; color: var(--gray); margin-bottom: 10px;">PLINKO AI SCANNER v5.0</div>
+                <div class="val" id="sigVal">x18.0</div>
+                <div style="color: var(--green); font-size: 12px; margin-top: 10px; font-weight: bold;">● СИГНАЛ АКТУАЛЕН</div>
+            </div>
+            <div class="play-now" onclick="openLink()">ИГРАТЬ В PLINKO</div>
+            <div class="card" style="font-size: 12px; color: #aaa; text-align: center;">
+                Используйте сигналы согласно инструкции в разделе "Обучение"
             </div>
         </div>
 
-        <button class="btn-play" id="btnMain">🔥 ИГРАТЬ И ЗАБРАТЬ +5%</button>
+        <div id="learn" class="page">
+            <h2 style="font-size:20px; margin-bottom:20px;">Академия Игрока</h2>
+            
+            <div class="lesson-card">
+                <div class="lesson-header" onclick="toggleLesson(this)">
+                    <span>📈 Как использовать сигналы?</span>
+                    <span>▼</span>
+                </div>
+                <div class="lesson-content">
+                    <div class="step"><b>Шаг 1:</b> Откройте игру Plinko на сайте Dragon Money.</div>
+                    <div class="step"><b>Шаг 2:</b> Дождитесь обновления сигнала в приложении (каждые 10 сек).</div>
+                    <div class="step"><b>Шаг 3:</b> Ставьте на 16 рядов (High Risk). Сигнал показывает вероятность выпадения шара в крайние сектора.</div>
+                </div>
+            </div>
 
-        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; text-align: left; font-size: 13px;">
-            <p style="color: var(--gold); font-weight: bold; margin-top: 0;">💎 ПОЧЕМУ DRAGON MONEY?</p>
-            <ul style="padding-left: 20px; color: #ccc;">
-                <li>Лицензия Curacao (3000+ игр)</li>
-                <li>Мин. деп/вывод: 100₽</li>
-                <li><b>Крипто-бонус +5% (Без вейджера на Плинко!)</b></li>
-            </ul>
+            <div class="lesson-card">
+                <div class="lesson-header" onclick="toggleLesson(this)">
+                    <span>💳 Пополнение (Крипта +5%)</span>
+                    <span>▼</span>
+                </div>
+                <div class="lesson-content">
+                    <div class="step"><b>1.</b> В меню депозита выберите "Криптовалюты" (LTC или USDT).</div>
+                    <div class="step"><b>2.</b> Бонус +5% зачислится автоматически и <b>не требует отыгрыша</b> на Плинко.</div>
+                    <div class="step"><b>3.</b> Если нет крипты — используйте @Wallet в Telegram для покупки через P2P.</div>
+                </div>
+            </div>
+
+            <div class="lesson-card">
+                <div class="lesson-header" onclick="toggleLesson(this)">
+                    <span>💸 Вывод средств</span>
+                    <span>▼</span>
+                </div>
+                <div class="lesson-content">
+                    <div class="step"><b>Лимиты:</b> Вывод от 100₽ на карту и крипту.</div>
+                    <div class="step"><b>Скорость:</b> На крипто-кошельки вывод занимает от 5 до 15 минут.</div>
+                    <div class="step"><b>Важно:</b> Убедитесь, что вы отыграли сумму депозита хотя бы один раз.</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="bonuses" class="page">
+            <div class="card" style="text-align:center;">
+                <h3 style="color:var(--gold);">ВАШ ПРОМОКОД</h3>
+                <div style="font-size: 32px; font-weight: 900; border: 2px dashed #444; padding: 15px; margin: 15px 0; color: var(--gold);">BONUSDROP</div>
+                <p style="color:var(--gray);">+1000₽ к первому пополнению</p>
+                <div class="play-now" onclick="copyPromo()">КОПИРОВАТЬ</div>
+            </div>
+        </div>
+
+        <div id="profile" class="page">
+            <div class="card">
+                <p style="margin:0; color:var(--gray); font-size: 12px;">Статус аккаунта</p>
+                <h2 style="margin:5px 0; color:var(--gold);">ELITE DRAGON</h2>
+            </div>
+            <div class="card">
+                <h3>Поддержка</h3>
+                <p style="font-size:14px; color:#ccc;">По всем вопросам пишите в чат нашего комьюнити. Мы поможем с регистрацией и бонусами.</p>
+            </div>
         </div>
 
     </div>
+
+    <nav>
+        <div class="nav-item active" onclick="showPage('signals', this)">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            Сигналы
+        </div>
+        <div class="nav-item" onclick="showPage('learn', this)">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+            Обучение
+        </div>
+        <div class="nav-item" onclick="showPage('bonuses', this)">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.65-.5-.65C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/></svg>
+            Бонусы
+        </div>
+        <div class="nav-item" onclick="showPage('profile', this)">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            Профиль
+        </div>
+    </nav>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        const url = "https://dg1.to/fpb5ialfu";
 
-        document.getElementById('btnMain').onclick = () => {
-            tg.openLink(url);
-            // Резервное копирование если ссылка не открылась
-            const el = document.createElement('textarea');
-            el.value = url; document.body.appendChild(el);
-            el.select(); document.execCommand('copy');
-            document.body.removeChild(el);
-        };
-
-        // Анимация сигналов как в ChickenRoad
-        const values = ["x12.5", "x5.0", "x15.0", "x2.2", "x10.0"];
-        
-        function updateSignal() {
-            const signal = document.getElementById('signalText');
-            const pockets = document.querySelectorAll('.pocket');
-            
-            // Эффект сканирования
-            signal.style.opacity = "0.3";
-            
-            setTimeout(() => {
-                const randomVal = values[Math.floor(Math.random() * values.length)];
-                signal.innerText = randomVal;
-                signal.style.opacity = "1";
-                
-                // Рандомная активная луза
-                pockets.forEach(p => p.classList.remove('active'));
-                pockets[Math.floor(Math.random() * pockets.length)].classList.add('active');
-            }, 500);
+        function showPage(pageId, el) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            tg.HapticFeedback.impactOccurred('medium');
         }
 
-        setInterval(updateSignal, 7000);
-        updateSignal();
+        function toggleLesson(header) {
+            const content = header.nextElementSibling;
+            content.classList.toggle('open');
+            header.querySelector('span:last-child').innerText = content.classList.contains('open') ? '▲' : '▼';
+            tg.HapticFeedback.selectionChanged();
+        }
+
+        function openLink() { tg.openLink("https://dg1.to/fpb5ialfu"); }
+
+        function copyPromo() {
+            navigator.clipboard.writeText("BONUSDROP");
+            tg.showPopup({ title: "Успех", message: "Промокод скопирован!", buttons: [{type: "ok"}] });
+        }
+
+        const sigs = ["x18.5", "x5.0", "x12.0", "x44.0", "x2.1"];
+        setInterval(() => {
+            document.getElementById('sigVal').innerText = sigs[Math.floor(Math.random()*sigs.length)];
+        }, 10000);
     </script>
 </body>
 </html>
