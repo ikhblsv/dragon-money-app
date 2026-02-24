@@ -3,48 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dragon Money Plinko</title>
+    <title>Dragon Plinko Hacker</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --red: #ff3333; --gold: #ffd700; --bg: #111111; --card: #1a1a1a; }
-        body { font-family: sans-serif; background: var(--bg); color: white; margin: 0; padding: 15px; }
-        .card { background: var(--card); border-radius: 15px; padding: 20px; margin-bottom: 15px; border: 1px solid #333; }
-        .btn { display: block; width: 100%; padding: 18px; background: linear-gradient(45deg, #ff3333, #990000); color: white; text-align: center; border-radius: 12px; font-weight: bold; text-decoration: none; border: none; font-size: 16px; cursor: pointer; }
-        .promo { border: 2px dashed var(--gold); padding: 15px; text-align: center; border-radius: 10px; color: var(--gold); font-weight: bold; font-size: 20px; cursor: pointer; }
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0; }
-        .grid div { background: #222; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #444; }
-        .hot { border-color: var(--gold) !important; color: var(--gold); }
+        :root {
+            --gold: #FFD700;
+            --dragon-red: #FF0000;
+            --bg-dark: #0a0a0a;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at top, #330000 0%, #0a0a0a 100%);
+            color: white;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            text-align: center;
+        }
+
+        /* Видео-фон или шапка */
+        .hero-section {
+            width: 100%;
+            height: 200px;
+            background: url('https://img.freepik.com/free-vector/abstract-red-fire-flame-black-background_1017-31627.jpg') center/cover;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 3px solid var(--dragon-red);
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3);
+        }
+
+        .hero-section video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.6;
+        }
+
+        .logo-overlay {
+            position: absolute;
+            font-weight: 900;
+            font-size: 28px;
+            color: var(--gold);
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 2px 2px 0px #000;
+            letter-spacing: 2px;
+        }
+
+        .container { padding: 20px; }
+
+        /* Стилизация сигналов как в боте @ChickenRoadHacker */
+        .radar-card {
+            background: rgba(30, 30, 30, 0.9);
+            border: 2px solid #333;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .radar-card::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255, 0, 0, 0.2), transparent);
+            animation: rotate 4s linear infinite;
+        }
+
+        @keyframes rotate { 100% { transform: rotate(360deg); } }
+
+        .signal-display {
+            position: relative;
+            z-index: 2;
+            font-size: 40px;
+            font-weight: 900;
+            color: var(--gold);
+            text-shadow: 0 0 15px var(--gold);
+        }
+
+        /* Кнопки */
+        .btn-play {
+            display: block;
+            background: linear-gradient(180deg, #FF4B4B 0%, #990000 100%);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            font-weight: 900;
+            font-size: 18px;
+            text-decoration: none;
+            box-shadow: 0 5px 20px rgba(255, 0, 0, 0.5);
+            margin: 20px 0;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .promo-badge {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px dashed var(--gold);
+            padding: 10px;
+            border-radius: 10px;
+            color: var(--gold);
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        /* Игровая сетка Plinko */
+        .plinko-preview {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 15px;
+        }
+
+        .pocket {
+            width: 40px;
+            height: 30px;
+            background: #222;
+            border-radius: 5px;
+            border: 1px solid #444;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #777;
+        }
+
+        .pocket.active {
+            background: var(--dragon-red);
+            color: white;
+            box-shadow: 0 0 10px var(--dragon-red);
+            border-color: #fff;
+        }
+
     </style>
 </head>
 <body>
-    <div style="text-align:center; padding: 10px 0;">
-        <h1 style="color:var(--gold); margin:0; font-size:22px;">DRAGON ANALYTICS</h1>
-        <p style="font-size:12px; color:#777;">Официальные стратегии & Сигналы</p>
+
+    <div class="hero-section">
+        <video autoplay muted loop playsinline>
+            <source src="https://static.videezy.com/system/resources/previews/000/038/544/original/fire_loop_4k.mp4" type="video/mp4">
+        </video>
+        <div class="logo-overlay">DRAGON HACKER</div>
     </div>
 
-    <div class="card">
-        <h3 style="margin-top:0; color:var(--gold);">🎯 PLINKO SIGNALS</h3>
-        <div class="grid">
-            <div id="s1" class="hot">x15<br><small>HOT</small></div>
-            <div id="s2">89%<br><small>WIN</small></div>
-            <div id="s3">LOW<br><small>RISK</small></div>
+    <div class="container">
+        
+        <div class="promo-badge">🎁 ПРОМОКОД: BONUSDROP (ДО 1000₽)</div>
+
+        <div class="radar-card">
+            <div style="font-size: 12px; color: #aaa; margin-bottom: 10px; z-index: 2; position: relative;">SCANNED PLINKO ALGORITHM v4.2</div>
+            <div class="signal-display" id="signalText">ОЖИДАНИЕ...</div>
+            <div class="plinko-preview" id="pockets">
+                <div class="pocket">x0.2</div>
+                <div class="pocket">x0.5</div>
+                <div class="pocket active">x15</div>
+                <div class="pocket">x1.2</div>
+                <div class="pocket">x0.2</div>
+            </div>
         </div>
-    </div>
 
-    <button class="btn" id="goBtn">ИГРАТЬ В DRAGON MONEY</button>
-    <p style="text-align:center; color:#00ff66; font-size:13px; font-weight:bold;">⚡️ +5% К ДЕПОЗИТУ КРИПТОЙ (БЕЗ ВЕЙДЖЕРА)</p>
+        <button class="btn-play" id="btnMain">🔥 ИГРАТЬ И ЗАБРАТЬ +5%</button>
 
-    <div class="card" id="promoBtn">
-        <h3 style="margin-top:0; text-align:center; font-size:14px;">ТВОЙ ПРОМОКОД (КЛИК)</h3>
-        <div class="promo">BONUSDROP</div>
-        <p style="text-align:center; font-size:11px; color:#777; margin-top:10px;">Дает до 1.000₽ к депозиту!</p>
-    </div>
+        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; text-align: left; font-size: 13px;">
+            <p style="color: var(--gold); font-weight: bold; margin-top: 0;">💎 ПОЧЕМУ DRAGON MONEY?</p>
+            <ul style="padding-left: 20px; color: #ccc;">
+                <li>Лицензия Curacao (3000+ игр)</li>
+                <li>Мин. деп/вывод: 100₽</li>
+                <li><b>Крипто-бонус +5% (Без вейджера на Плинко!)</b></li>
+            </ul>
+        </div>
 
-    <div class="card">
-        <h3 style="margin-top:0; color:var(--gold);">📋 ИНФО</h3>
-        <p style="font-size:13px; margin:5px 0;">• Мин. деп: <b>100₽</b></p>
-        <p style="font-size:13px; margin:5px 0;">• Мин. вывод: <b>100₽</b></p>
-        <p style="font-size:13px; margin:5px 0;">• Лицензия: <b>Curacao ✅</b></p>
     </div>
 
     <script>
@@ -52,27 +189,38 @@
         tg.expand();
         const url = "https://dg1.to/fpb5ialfu";
 
-        document.getElementById('goBtn').onclick = () => {
+        document.getElementById('btnMain').onclick = () => {
             tg.openLink(url);
-            copy(url, "Ссылка скопирована! Вставь её в браузере.");
+            // Резервное копирование если ссылка не открылась
+            const el = document.createElement('textarea');
+            el.value = url; document.body.appendChild(el);
+            el.select(); document.execCommand('copy');
+            document.body.removeChild(el);
         };
 
-        document.getElementById('promoBtn').onclick = () => {
-            copy("BONUSDROP", "Промокод скопирован!");
-        };
-
-        function copy(text, msg) {
-            const area = document.createElement('textarea');
-            area.value = text; document.body.appendChild(area);
-            area.select(); document.execCommand('copy');
-            document.body.removeChild(area);
-            tg.showPopup({ title: "Успешно", message: msg, buttons: [{type: "ok"}] });
+        // Анимация сигналов как в ChickenRoad
+        const values = ["x12.5", "x5.0", "x15.0", "x2.2", "x10.0"];
+        
+        function updateSignal() {
+            const signal = document.getElementById('signalText');
+            const pockets = document.querySelectorAll('.pocket');
+            
+            // Эффект сканирования
+            signal.style.opacity = "0.3";
+            
+            setTimeout(() => {
+                const randomVal = values[Math.floor(Math.random() * values.length)];
+                signal.innerText = randomVal;
+                signal.style.opacity = "1";
+                
+                // Рандомная активная луза
+                pockets.forEach(p => p.classList.remove('active'));
+                pockets[Math.floor(Math.random() * pockets.length)].classList.add('active');
+            }, 500);
         }
 
-        setInterval(() => {
-            const v = ['x10','x15','x33','x5'];
-            document.querySelector('#s1').innerHTML = v[Math.floor(Math.random()*v.length)] + '<br><small>HOT</small>';
-        }, 5000);
+        setInterval(updateSignal, 7000);
+        updateSignal();
     </script>
 </body>
 </html>
