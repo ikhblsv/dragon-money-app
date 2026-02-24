@@ -5,22 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dragon Money Inside</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --blue: #007aff;
-            --dark-blue: #004bb5;
-            --bg: #f0f2f5;
-            --card: #ffffff;
-            --text: #1c1e21;
-            --gray: #8d949e;
-            --dragon-red: #ff0000;
+            --d-red: #ff0000;
+            --d-gold: #ffcc00;
+            --d-bg: #0a0a0a;
+            --d-card: #161616;
         }
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            background: var(--d-bg);
+            background-image: radial-gradient(circle at top, #3a0000 0%, #0a0a0a 100%);
+            color: white;
             margin: 0;
             padding: 0;
             overflow: hidden;
@@ -31,195 +29,155 @@
         #onboarding {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: white;
-            z-index: 1000;
+            background: var(--d-bg);
+            background-image: radial-gradient(circle at center, #5e0000 0%, #0a0a0a 100%);
+            z-index: 2000;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 30px;
             text-align: center;
             box-sizing: border-box;
         }
 
-        .avatar {
-            width: 120px;
-            height: 120px;
+        .anonymous-avatar {
+            width: 130px;
+            height: 130px;
             border-radius: 50%;
-            background: url('https://img.freepik.com/free-photo/handsome-young-businessman-suit-glasses_273609-7113.jpg') center/cover;
-            border: 4px solid var(--blue);
+            /* Анонимное стильное фото разработчика/хакера */
+            background: url('https://img.freepik.com/free-photo/view-3d-hacker-rear_23-2150793132.jpg') center/cover;
+            border: 3px solid var(--d-red);
+            box-shadow: 0 0 20px var(--d-red);
             margin-bottom: 20px;
         }
 
         .btn-next {
-            background: var(--blue);
+            background: linear-gradient(180deg, #ff4d4d 0%, #800000 100%);
             color: white;
-            width: 100%;
-            padding: 16px;
-            border-radius: 12px;
-            font-weight: 700;
+            width: calc(100% - 60px);
+            padding: 20px;
+            border-radius: 15px;
+            font-weight: 900;
+            text-transform: uppercase;
             border: none;
             position: absolute;
-            bottom: 30px;
-            width: calc(100% - 40px);
+            bottom: 40px;
+            box-shadow: 0 5px 20px rgba(255, 0, 0, 0.4);
         }
 
         /* --- ОСНОВНОЙ ИНТЕРФЕЙС --- */
         header {
-            background: #1c2b3a;
-            color: white;
-            padding: 15px;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-weight: 900;
+            border-bottom: 2px solid var(--d-red);
         }
 
+        .logo-txt { font-weight: 900; color: var(--d-gold); letter-spacing: 2px; font-size: 18px; }
+
         .content-area {
-            height: calc(100vh - 140px);
+            height: calc(100vh - 145px);
             overflow-y: auto;
-            padding: 15px;
+            padding: 20px;
         }
 
         .page { display: none; }
-        .page.active { display: block; animation: slideIn 0.3s ease; }
+        .page.active { display: block; animation: fadeIn 0.3s ease-out; }
 
-        @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .card {
-            background: var(--card);
-            border-radius: 16px;
+            background: var(--d-card);
+            border-radius: 20px;
             padding: 20px;
             margin-bottom: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
         /* --- ТАБ БАР --- */
         nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background: white;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0 25px 0;
-            border-top: 1px solid #ddd;
+            position: fixed; bottom: 0; width: 100%;
+            background: #000;
+            display: flex; justify-content: space-around;
+            padding: 12px 0 28px 0;
+            border-top: 1px solid #222;
         }
 
-        .nav-item {
-            text-align: center;
-            color: var(--gray);
-            font-size: 10px;
-            font-weight: 600;
-            flex: 1;
-        }
-
-        .nav-item.active { color: var(--blue); }
-
-        .nav-item svg {
-            width: 24px;
-            height: 24px;
-            display: block;
-            margin: 0 auto 4px;
-        }
-
-        /* ЧАТ */
-        .chat-msg {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .msg-bubble {
-            background: #f1f0f0;
-            padding: 10px 15px;
-            border-radius: 18px;
-            font-size: 14px;
-        }
+        .nav-item { text-align: center; color: #555; font-size: 10px; font-weight: 700; flex: 1; }
+        .nav-item.active { color: var(--d-gold); }
+        .nav-item svg { width: 22px; height: 22px; display: block; margin: 0 auto 5px; }
 
         .signal-btn {
-            background: linear-gradient(90deg, #007aff, #00c6ff);
-            color: white;
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-            font-weight: 700;
-            margin-top: 10px;
-            display: block;
-            text-decoration: none;
+            display: block; width: 100%; padding: 18px;
+            background: linear-gradient(180deg, #ff4d4d 0%, #800000 100%);
+            border-radius: 12px; color: white; text-align: center;
+            font-weight: 900; text-decoration: none; margin-top: 15px;
         }
 
-        .lvl-badge {
-            background: #eee;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 10px;
-            color: var(--blue);
-            font-weight: 900;
-        }
+        .lvl-badge { background: var(--d-gold); color: black; padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: 900; }
     </style>
 </head>
 <body>
 
     <div id="onboarding">
-        <div class="avatar"></div>
-        <h2 id="onb-title">Алекс Левин</h2>
-        <p id="onb-text" style="color: var(--gray);">Совладелец приложения Dragon Inside</p>
-        <div class="card" style="background: #f8f9fa; border: none;">
-            <h3 id="onb-welcome">Рад приветствовать вас!</h3>
-            <p style="font-size: 14px;">Прежде чем пользоваться нашим приложением, пройдите краткое знакомство.</p>
+        <div class="anonymous-avatar"></div>
+        <h2 id="onb-title" style="color: var(--d-gold); font-size: 22px; margin-bottom: 5px;">Ex-Team Dragon Money</h2>
+        <p id="onb-sub" style="color: #aaa; margin-bottom: 20px;">Закрытое сообщество разработчиков</p>
+        <div class="card" style="background: rgba(0,0,0,0.4);">
+            <h3 id="onb-welcome">Мы знаем систему изнутри.</h3>
+            <p id="onb-text" style="font-size: 14px; line-height: 1.5;">Наше приложение создано бывшими сотрудниками Dragon Money. Мы объединили опыт разработки алгоритмов, чтобы дать вам преимущество.</p>
         </div>
-        <button class="btn-next" onclick="nextOnboarding()">Начать</button>
+        <button class="btn-next" onclick="nextStep()">Начать работу</button>
     </div>
 
     <header>
-        <span>DragonInside</span>
-        <div style="font-size: 12px;">Chase <span class="lvl-badge" style="background: white;">0 LVL</span> 🇷🇺</div>
+        <span class="logo-txt">DRAGON INSIDE</span>
+        <div style="font-size: 11px;">Chase <span class="lvl-badge">5 LVL</span> 🇷🇺</div>
     </header>
 
     <div class="content-area">
-        
-        <div id="home" class="page active">
-            <div class="card" style="padding: 0; overflow: hidden;">
-                <img src="https://img.freepik.com/free-photo/group-business-people-office_23-2148332104.jpg" style="width:100%;">
-                <div style="padding: 15px;">
-                    <h3>Лучшие сигналы на рынке</h3>
-                    <p style="font-size: 14px; color: var(--gray);">Мы объединили мощь 1000+ самых успешных игроков в одну систему.</p>
-                </div>
+        <div id="signals" class="page active">
+            <div class="card" style="text-align: center; border: 2px solid var(--d-red);">
+                <div style="font-size: 10px; color: var(--d-gold); letter-spacing: 2px; margin-bottom: 10px;">ALGORITHM v11.0 ACTIVE</div>
+                <div id="sigValue" style="font-size: 55px; font-weight: 900; text-shadow: 0 0 20px var(--d-red);">x21.0</div>
+                <div style="color: #00ff66; font-size: 12px; font-weight: bold;">● СИГНАЛ ПОДТВЕРЖДЕН</div>
             </div>
+            <a href="https://dg1.to/fpb5ialfu" class="signal-btn">ПЕРЕЙТИ К ИГРЕ</a>
         </div>
 
-        <div id="signals" class="page">
+        <div id="academy" class="page">
+            <h2 style="color: var(--d-gold); font-size: 20px;">База знаний</h2>
             <div class="card">
-                <h3>Dragon Inside Signals</h3>
-                <p>Ежедневные сигналы на Plinko, основанные на действиях профи.</p>
-                <div style="background: #eef6ff; padding: 15px; border-radius: 12px; color: var(--blue); font-weight: 700; text-align: center;">
-                    82% успешных сигналов за Февраль!
-                </div>
-                <a href="https://dg1.to/fpb5ialfu" class="signal-btn">Регистрация в Dragon Money</a>
+                <h4 style="margin: 0 0 10px 0;">Как мы работаем?</h4>
+                <p style="font-size: 13px; color: #ccc;">Мы используем API-уязвимости и паттерны выдачи, которые закладывали при разработке платформы.</p>
             </div>
         </div>
 
         <div id="chat" class="page">
-            <div class="chat-msg">
-                <div style="width:30px; height:30px; background:#ccc; border-radius:50%;"></div>
-                <div class="msg-bubble"><b>Никита В. <span class="lvl-badge">6LVL</span></b><br>Правда, главная ошибка новичков в том, что они игнорируют риск-менеджмент.</div>
-            </div>
-            <div class="chat-msg">
-                <div style="width:30px; height:30px; background:#ccc; border-radius:50%;"></div>
-                <div class="msg-bubble"><b>Дмитрий Т. <span class="lvl-badge">5LVL</span></b><br>Да, чат сегодня прям ожил по полной. Сигналы залетают!</div>
+            <div class="card">
+                <div style="display:flex; gap:10px; margin-bottom:15px;">
+                    <div style="min-width:35px; height:35px; background: #330000; border-radius:50%;"></div>
+                    <div>
+                        <span style="font-size:12px; font-weight:700;">Insider_Dev <span class="lvl-badge">DEV</span></span>
+                        <div style="background:#222; padding:10px; border-radius:12px; font-size:13px; margin-top:5px;">Обновили ядро анализатора. Теперь точность на Plinko выросла до 89%.</div>
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
 
     <nav>
-        <div class="nav-item active" onclick="showPage('home', this)">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Главная
-        </div>
-        <div class="nav-item" onclick="showPage('signals', this)">
+        <div class="nav-item active" onclick="pg('signals', this)">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Сигналы
         </div>
-        <div class="nav-item" onclick="showPage('chat', this)">
+        <div class="nav-item" onclick="pg('academy', this)">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>Инфо
+        </div>
+        <div class="nav-item" onclick="pg('chat', this)">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Чат
         </div>
     </nav>
@@ -228,29 +186,34 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        let step = 1;
-        function nextOnboarding() {
-            step++;
-            if (step === 2) {
-                document.getElementById('onb-welcome').innerText = "Лучшие сигналы";
-                document.getElementById('onb-text').innerText = "Система ежесекундно определяет сделки топ-игроков.";
-            } else if (step === 3) {
-                document.getElementById('onb-welcome').innerText = "Все прозрачно";
-                document.getElementById('onb-text').innerText = "Общайтесь с другими пользователями прямо в приложении.";
-                document.querySelector('.btn-next').innerText = "Стать топом";
+        let s = 1;
+        function nextStep() {
+            s++;
+            if(s === 2) {
+                document.getElementById('onb-welcome').innerText = "Инсайдерский софт";
+                document.getElementById('onb-text').innerText = "Мы не гадаем. Мы знаем, как работают серверные сиды платформы.";
+            } else if(s === 3) {
+                document.getElementById('onb-welcome').innerText = "Безопасность";
+                document.getElementById('onb-text').innerText = "Все сигналы передаются через зашифрованные протоколы. Ваша активность анонимна.";
+                document.querySelector('.btn-next').innerText = "Запустить софт";
             } else {
                 document.getElementById('onboarding').style.display = 'none';
             }
             tg.HapticFeedback.impactOccurred('medium');
         }
 
-        function showPage(id, el) {
+        function pg(id, el) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
             tg.HapticFeedback.selectionChanged();
         }
+
+        setInterval(() => {
+            const vals = ["x18.0", "x4.2", "x31.0", "x1.5", "x52.0"];
+            document.getElementById('sigValue').innerText = vals[Math.floor(Math.random()*vals.length)];
+        }, 9000);
     </script>
 </body>
 </html>
