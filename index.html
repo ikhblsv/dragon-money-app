@@ -18,17 +18,8 @@
         body {
             font-family: 'Montserrat', sans-serif;
             background: var(--bg);
-            background-image: 
-                radial-gradient(circle at 50% -10%, #800000 0%, transparent 60%),
-                url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+            background-image: radial-gradient(circle at 50% -10%, #800000 0%, transparent 60%), url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
             color: white; margin: 0; padding: 0; overflow: hidden; height: 100vh;
-        }
-
-        /* Фоновый дракон */
-        body::before {
-            content: ""; position: fixed; top: 10%; left: -10%; width: 350px; height: 350px;
-            background: url('https://cdn-icons-png.flaticon.com/512/528/528101.png') no-repeat center/contain;
-            opacity: 0.1; filter: drop-shadow(0 0 40px var(--dragon-red)); z-index: -1; transform: rotate(15deg);
         }
 
         header {
@@ -41,17 +32,18 @@
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Стили аккордеона */
+        /* Аккордеон с картинками */
         .acc-item { background: var(--card-glass); border: 1px solid var(--border-gold); border-radius: 15px; margin-bottom: 12px; overflow: hidden; }
-        .acc-head { padding: 18px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 800; font-size: 14px; text-transform: uppercase; }
-        .acc-body { display: none; padding: 15px; background: rgba(0,0,0,0.4); border-top: 1px solid var(--border-gold); font-size: 13px; line-height: 1.6; color: #ccc; }
+        .acc-head { padding: 18px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 800; font-size: 13px; text-transform: uppercase; }
+        .acc-body { display: none; padding: 0 0 15px 0; background: rgba(0,0,0,0.4); border-top: 1px solid var(--border-gold); }
         .acc-body.open { display: block; }
-        .acc-head span.arrow { transition: 0.3s; color: var(--gold); }
+        
+        .section-img { width: 100%; height: 160px; object-fit: cover; margin-bottom: 15px; border-bottom: 1px solid var(--border-gold); }
+        .section-text { padding: 0 15px; font-size: 13px; line-height: 1.6; color: #ccc; }
 
-        /* Plinko Live Session */
-        .live-session { background: rgba(0,0,0,0.6); border-radius: 15px; padding: 10px; margin-top: 20px; border: 1px dashed var(--dragon-red); }
-        .ball-history { display: flex; justify-content: center; gap: 8px; margin-top: 10px; }
-        .ball { width: 35px; height: 35px; background: var(--dragon-red); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; color: white; box-shadow: 0 0 10px var(--dragon-red); animation: dropBall 2s infinite; }
+        /* Plinko Live */
+        .ball-history { display: flex; justify-content: center; gap: 8px; margin-top: 15px; }
+        .ball { width: 38px; height: 38px; background: var(--dragon-red); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; color: white; box-shadow: 0 0 15px var(--dragon-red); animation: dropBall 2.5s infinite; }
         @keyframes dropBall { 0% { opacity: 0; transform: translateY(-20px); } 50% { opacity: 1; } 100% { opacity: 0; transform: translateY(20px); } }
 
         /* Nav */
@@ -60,7 +52,7 @@
         .nav-btn.active { color: var(--gold); }
         .nav-btn svg { display: block; margin: 0 auto 5px; width: 20px; height: 20px; }
 
-        .play-btn { display: block; background: linear-gradient(180deg, #FF0000 0%, #800000 100%); color: white; padding: 18px; border-radius: 15px; text-align: center; font-weight: 900; text-decoration: none; font-size: 16px; margin-top: 15px; box-shadow: 0 0 20px rgba(255, 0, 0, 0.4); }
+        .play-btn { display: block; background: linear-gradient(180deg, #FF0000 0%, #800000 100%); color: white; padding: 18px; border-radius: 15px; text-align: center; font-weight: 900; text-decoration: none; margin-top: 15px; box-shadow: 0 0 20px rgba(255, 0, 0, 0.4); }
     </style>
 </head>
 <body>
@@ -71,107 +63,117 @@
         
         <div id="signals" class="page active">
             <div style="background:radial-gradient(circle, #2a0000 0%, #000 100%); border: 2px solid var(--dragon-red); border-radius: 20px; padding: 30px; text-align: center;">
-                <div style="font-size:10px; color:var(--gold); letter-spacing:2px; margin-bottom:10px;">LIVE AI PREDICTOR</div>
+                <div style="font-size:10px; color:var(--gold); letter-spacing:2px;">LIVE AI PREDICTOR</div>
                 <div id="sig" style="font-size:55px; font-weight:900; text-shadow: 0 0 20px red;">x14.5</div>
-                <div class="live-session">
-                    <div style="font-size:9px; color:#777;">LIVE SESSION HISTORY</div>
-                    <div class="ball-history">
-                        <div class="ball" style="animation-delay: 0s;">x2.1</div>
-                        <div class="ball" style="animation-delay: 0.5s;">x14</div>
-                        <div class="ball" style="animation-delay: 1s;">x5.2</div>
-                        <div class="ball" style="animation-delay: 1.5s;">x24</div>
-                    </div>
+                <div class="ball-history">
+                    <div class="ball" style="animation-delay: 0s;">x5.2</div>
+                    <div class="ball" style="animation-delay: 0.8s;">x14</div>
+                    <div class="ball" style="animation-delay: 1.6s;">x2.1</div>
                 </div>
             </div>
             <a href="https://dg1.to/fpb5ialfu" class="play-btn">ИГРАТЬ НА DRAGON MONEY</a>
-            <div style="text-align:center; color:var(--gold); font-weight:800; margin-top:15px; font-size:13px;">БОНУС: ДО 1000₽ НА ДЕПОЗИТ 🧧</div>
+            <p style="text-align:center; color:var(--gold); font-weight:800; margin-top:15px; font-size:12px;">БОНУС ДО 1000₽ НА ДЕПОЗИТ 🧧</p>
         </div>
 
         <div id="top-slots" class="page">
-            <h2 style="color:var(--gold); font-size:18px;">🔥 ТОП ВЫДАЮЩИХСЯ СЛОТОВ</h2>
+            <h2 style="color:var(--gold); font-size:18px; margin-bottom:15px;">🔥 ТОП ВЫДАЮЩИХСЯ СЛОТОВ</h2>
             
             <div class="acc-item">
-                <div class="acc-head" onclick="tgl(this)"><span>1. GATES OF OLYMPUS</span><span class="arrow">▼</span></div>
+                <div class="acc-head" onclick="tgl(this)"><span>GATES OF OLYMPUS</span><span>▼</span></div>
                 <div class="acc-body">
-                    <b>RTP:</b> 96.5% | <b>Волатильность:</b> High<br><br>
-                    <b>Стратегия:</b> Ставка 0.5% от банка. Слот имеет накопительный эффект. Если за 40 спинов не было функции "Multiplier", увеличивайте ставку на 20%. Идеально для ловли x500.
+                    <img class="section-img" src="https://the-dog-house.com/wp-content/uploads/2023/11/gates-of-olympus-slot.webp" alt="Gates of Olympus">
+                    <div class="section-text">
+                        <b>RTP: 96.5%</b> | Рекомендуемая ставка: 0.5% от банка. Слот имеет цикл накопления. Если иксов нет долго — ждите занос x500.
+                    </div>
                 </div>
             </div>
 
             <div class="acc-item">
-                <div class="acc-head" onclick="tgl(this)"><span>2. SWEET BONANZA</span><span class="arrow">▼</span></div>
+                <div class="acc-head" onclick="tgl(this)"><span>SWEET BONANZA</span><span>▼</span></div>
                 <div class="acc-body">
-                    <b>RTP:</b> 96.48% | <b>Волатильность:</b> Med-High<br><br>
-                    <b>Стратегия:</b> Отключение функции "Ante Bet" повышает шанс выпадения крупных символов. Рекомендуется играть сессиями по 30 минут с перерывами.
+                    <img class="section-img" src="https://static.casino.guru/pict/85257/Sweet-Bonanza.png?timestamp=1653388755000&width=838" alt="Sweet Bonanza">
+                    <div class="section-text">
+                        <b>RTP: 96.48%</b> | Идеально для открутки вейджера. Лучше играть короткими сессиями до первого крупного умножения.
+                    </div>
                 </div>
             </div>
 
             <div class="acc-item">
-                <div class="acc-head" onclick="tgl(this)"><span>3. SUGAR RUSH</span><span class="arrow">▼</span></div>
+                <div class="acc-head" onclick="tgl(this)"><span>SUGAR RUSH</span><span>▼</span></div>
                 <div class="acc-body">
-                    <b>RTP:</b> 96.5% | <b>Волатильность:</b> Very High<br><br>
-                    <b>Стратегия:</b> Ставка на "Multiplier Spots". Слот выдает сериями. Если пошли иксы — не выходите из игры еще 10 спинов, цикл отдачи продолжается.
+                    <img class="section-img" src="https://static.casino.guru/pict/288484/Sugar-Rush.png?timestamp=1655381395000&width=838" alt="Sugar Rush">
+                    <div class="section-text">
+                        <b>Волатильность: Very High.</b> Фокус на множителях в одной зоне. Если пошли иксы — серия будет продолжаться.
+                    </div>
                 </div>
             </div>
 
             <div class="acc-item">
-                <div class="acc-head" onclick="tgl(this)"><span>4. ZEUS VS HADES</span><span class="arrow">▼</span></div>
+                <div class="acc-head" onclick="tgl(this)"><span>ZEUS VS HADES</span><span>▼</span></div>
                 <div class="acc-body">
-                    <b>RTP:</b> 96.07% | <b>Волатильность:</b> Extreme<br><br>
-                    <b>Стратегия:</b> Выбирайте режим "Hades" только при наличии банка на 200+ ставок. Самые крупные иксы (x15,000) заложены именно здесь.
+                    <img class="section-img" src="https://static.casino.guru/pict/463617/Zeus-vs-Hades---Gods-of-War.png?timestamp=1684742780000&width=838" alt="Zeus vs Hades">
+                    <div class="section-text">
+                        <b>Extreme Risk.</b> Режим Hades может выдать x15,000. Требует запаса банка минимум на 200 спинов.
+                    </div>
                 </div>
             </div>
 
             <div class="acc-item">
-                <div class="acc-head" onclick="tgl(this)"><span>5. THE DOG HOUSE</span><span class="arrow">▼</span></div>
+                <div class="acc-head" onclick="tgl(this)"><span>THE DOG HOUSE</span><span>▼</span></div>
                 <div class="acc-body">
-                    <b>RTP:</b> 96.51% | <b>Волатильность:</b> High<br><br>
-                    <b>Стратегия:</b> Старая школа. Идеален для "догона". Если в бонуске выпал "Sticky Wild" на 2-м барабане, вероятность крупного заноса повышается на 70%.
+                    <img class="section-img" src="https://static.casino.guru/pict/83344/The-Dog-House.png?timestamp=1653388308000&width=838" alt="The Dog House">
+                    <div class="section-text">
+                        Классика. Самый стабильный слот для "догона". Ждите Sticky Wilds на центральных барабанах.
+                    </div>
                 </div>
             </div>
         </div>
 
         <div id="guides" class="page">
-            <h2 style="color:var(--gold); font-size:18px;">📒 БАЗА ЗНАНИЙ</h2>
+            <h2 style="color:var(--gold); font-size:18px; margin-bottom:15px;">📒 БАЗА ЗНАНИЙ</h2>
 
             <div class="acc-item">
-                <div class="acc-head" onclick="tgl(this)"><span>📥 КАК ПОПОЛНИТЬ?</span><span class="arrow">▼</span></div>
+                <div class="acc-head" onclick="tgl(this)"><span>📥 ПОПОЛНЕНИЕ СЧЕТА</span><span>▼</span></div>
                 <div class="acc-body">
-                    1. Зайдите в раздел "Касса".<br>
-                    2. Выберите способ (Карта или Крипта).<br>
-                    3. За пополнение в <b>Криптовалюте</b> (LTC/USDT) вы автоматически получаете <b>+5% к депозиту</b>. Этот бонус не нужно отыгрывать (Wager 0) при игре в Plinko!
+                    <img class="section-img" src="https://images.unsplash.com/photo-1621416848446-9f6ef04565b1?auto=format&fit=crop&q=80&w=800" alt="Deposit">
+                    <div class="section-text">
+                        Зайдите в "Кассу". При выборе <b>Криптовалюты</b> вы получаете <b>+5% к депозиту</b> моментально. Эти деньги сразу доступны для игры в Plinko.
+                    </div>
                 </div>
             </div>
 
             <div class="acc-item">
-                <div class="acc-head" onclick="tgl(this)"><span>📤 КАК ВЫВЕСТИ?</span><span class="arrow">▼</span></div>
+                <div class="acc-head" onclick="tgl(this)"><span>📤 ВЫВОД СРЕДСТВ</span><span>▼</span></div>
                 <div class="acc-body">
-                    - Минимальный вывод: 100₽.<br>
-                    - На банковские карты: 15-60 минут.<br>
-                    - На Крипто-кошельки: 5-15 минут.<br>
-                    Перед выводом убедитесь, что сумма ставок превышает сумму депозита (правило 1x).
+                    <img class="section-img" src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80&w=800" alt="Withdrawal">
+                    <div class="section-text">
+                        Мин. вывод: 100₽. На карты — до часа, на Крипто-кошельки — до 15 минут. Выводите прибыль частями для безопасности.
+                    </div>
                 </div>
             </div>
 
             <div class="acc-item">
-                <div class="acc-head" onclick="tgl(this)"><span>🌐 РАБОЧИЙ VPN</span><span class="arrow">▼</span></div>
+                <div class="acc-head" onclick="tgl(this)"><span>🌐 РАБОЧИЙ VPN</span><span>▼</span></div>
                 <div class="acc-body">
-                    Используйте <a href="https://t.me/routuber_bot?start=ref1355298240" style="color:var(--gold);">этот VPN</a>. <br>
-                    1. Установите приложение.<br>
-                    2. Вставьте ссылку: <code>https://s.routuber.tv/sub/3kQ6gDg_gjAWnchKJTtYWnTPG</code><br>
-                    Это обеспечит стабильный пинг и доступ ко всем слотам.
+                    <img class="section-img" src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=800" alt="VPN">
+                    <div class="section-text">
+                        Если сайт не грузится, используйте <a href="https://t.me/routuber_bot?start=ref1355298240" style="color:var(--gold);">этот VPN</a>.<br><br>
+                        1. Скачайте приложение.<br>
+                        2. Нажмите "+".<br>
+                        3. <b>Вставьте Ключ:</b> <code>https://s.routuber.tv/sub/3kQ6gDg_gjAWnchKJTtYWnTPG</code>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div id="bank" class="page">
             <h2 style="color:var(--gold); font-size:18px;">💰 КАЛЬКУЛЯТОР 2%</h2>
-            <div style="background:var(--card-glass); padding:20px; border-radius:20px; border:1px solid var(--border-gold);">
-                <p style="font-size:12px;">Введите ваш баланс (₽):</p>
-                <input type="number" id="balInput" style="width:100%; padding:15px; background:#000; border:1px solid var(--dragon-red); color:#fff; font-size:20px; border-radius:10px; box-sizing:border-box;" oninput="calc()">
+            <div style="background:var(--card-glass); padding:25px; border-radius:20px; border:1px solid var(--border-gold);">
+                <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" style="width:60px; margin:0 auto 15px; display:block; filter: invert(1);">
+                <input type="number" id="balInput" placeholder="Ваш баланс ₽" style="width:100%; padding:15px; background:#000; border:1px solid var(--dragon-red); color:#fff; font-size:20px; border-radius:10px; text-align:center;" oninput="calc()">
                 <div id="resBox" style="margin-top:20px; display:none; text-align:center;">
-                    <div style="font-size:11px; color:#777;">ВАША БЕЗОПАСНАЯ СТАВКА</div>
-                    <div id="idealBet" style="font-size:32px; font-weight:900; color:var(--gold);">0 ₽</div>
+                    <div style="font-size:11px; color:#777;">БЕЗОПАСНАЯ СТАВКА:</div>
+                    <div id="idealBet" style="font-size:36px; font-weight:900; color:var(--gold);">0 ₽</div>
                 </div>
             </div>
         </div>
@@ -208,7 +210,7 @@
         function tgl(el) {
             const body = el.nextElementSibling;
             body.classList.toggle('open');
-            el.querySelector('.arrow').innerText = body.classList.contains('open') ? '▲' : '▼';
+            el.querySelector('span:last-child').innerText = body.classList.contains('open') ? '▲' : '▼';
             tg.HapticFeedback.selectionChanged();
         }
 
@@ -220,15 +222,15 @@
             } else { document.getElementById('resBox').style.display = 'none'; }
         }
 
-        // Симуляция Live Session
-        const hVal = ["x2.1", "x14", "x5.2", "x24", "x1.5", "x88"];
+        // Симуляция Live сигналов
+        const vals = ["x12.4", "x5.0", "x24.1", "x2.0", "x38.5", "x1.5"];
         setInterval(() => {
             const balls = document.querySelectorAll('.ball');
             balls.forEach(ball => {
-                ball.innerText = hVal[Math.floor(Math.random()*hVal.length)];
+                ball.innerText = vals[Math.floor(Math.random()*vals.length)];
             });
-            document.getElementById('sig').innerText = hVal[Math.floor(Math.random()*hVal.length)];
-        }, 3000);
+            document.getElementById('sig').innerText = vals[Math.floor(Math.random()*vals.length)];
+        }, 4000);
     </script>
 </body>
 </html>
