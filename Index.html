@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dragon Money Plinko</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root { --red: #ff3333; --gold: #ffd700; --bg: #111111; --card: #1a1a1a; }
+        body { font-family: sans-serif; background: var(--bg); color: white; margin: 0; padding: 15px; }
+        .card { background: var(--card); border-radius: 15px; padding: 20px; margin-bottom: 15px; border: 1px solid #333; }
+        .btn { display: block; width: 100%; padding: 18px; background: linear-gradient(45deg, #ff3333, #990000); color: white; text-align: center; border-radius: 12px; font-weight: bold; text-decoration: none; border: none; font-size: 16px; cursor: pointer; }
+        .promo { border: 2px dashed var(--gold); padding: 15px; text-align: center; border-radius: 10px; color: var(--gold); font-weight: bold; font-size: 20px; cursor: pointer; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0; }
+        .grid div { background: #222; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #444; }
+        .hot { border-color: var(--gold) !important; color: var(--gold); }
+    </style>
+</head>
+<body>
+    <div style="text-align:center; padding: 10px 0;">
+        <h1 style="color:var(--gold); margin:0; font-size:22px;">DRAGON ANALYTICS</h1>
+        <p style="font-size:12px; color:#777;">Официальные стратегии & Сигналы</p>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top:0; color:var(--gold);">🎯 PLINKO SIGNALS</h3>
+        <div class="grid">
+            <div id="s1" class="hot">x15<br><small>HOT</small></div>
+            <div id="s2">89%<br><small>WIN</small></div>
+            <div id="s3">LOW<br><small>RISK</small></div>
+        </div>
+    </div>
+
+    <button class="btn" id="goBtn">ИГРАТЬ В DRAGON MONEY</button>
+    <p style="text-align:center; color:#00ff66; font-size:13px; font-weight:bold;">⚡️ +5% К ДЕПОЗИТУ КРИПТОЙ (БЕЗ ВЕЙДЖЕРА)</p>
+
+    <div class="card" id="promoBtn">
+        <h3 style="margin-top:0; text-align:center; font-size:14px;">ТВОЙ ПРОМОКОД (КЛИК)</h3>
+        <div class="promo">BONUSDROP</div>
+        <p style="text-align:center; font-size:11px; color:#777; margin-top:10px;">Дает до 1.000₽ к депозиту!</p>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top:0; color:var(--gold);">📋 ИНФО</h3>
+        <p style="font-size:13px; margin:5px 0;">• Мин. деп: <b>100₽</b></p>
+        <p style="font-size:13px; margin:5px 0;">• Мин. вывод: <b>100₽</b></p>
+        <p style="font-size:13px; margin:5px 0;">• Лицензия: <b>Curacao ✅</b></p>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        const url = "https://dg1.to/fpb5ialfu";
+
+        document.getElementById('goBtn').onclick = () => {
+            tg.openLink(url);
+            copy(url, "Ссылка скопирована! Вставь её в браузере.");
+        };
+
+        document.getElementById('promoBtn').onclick = () => {
+            copy("BONUSDROP", "Промокод скопирован!");
+        };
+
+        function copy(text, msg) {
+            const area = document.createElement('textarea');
+            area.value = text; document.body.appendChild(area);
+            area.select(); document.execCommand('copy');
+            document.body.removeChild(area);
+            tg.showPopup({ title: "Успешно", message: msg, buttons: [{type: "ok"}] });
+        }
+
+        setInterval(() => {
+            const v = ['x10','x15','x33','x5'];
+            document.querySelector('#s1').innerHTML = v[Math.floor(Math.random()*v.length)] + '<br><small>HOT</small>';
+        }, 5000);
+    </script>
+</body>
+</html>
