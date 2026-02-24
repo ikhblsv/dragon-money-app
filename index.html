@@ -3,241 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dragon Money Elite</title>
+    <title>Dragon Money Inside Pro</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --gold: #FFD700;
             --dragon-red: #E60000;
-            --deep-dark: #080808;
-            --accent: #FF4500;
+            --bg: #050505;
+            --card-glass: rgba(255, 255, 255, 0.05);
+            --border-gold: rgba(255, 215, 0, 0.3);
         }
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: var(--deep-dark);
-            /* Анимированный живой фон с золотыми искрами */
+            background: var(--bg);
             background-image: 
-                radial-gradient(circle at 50% -20%, #6e0000 0%, transparent 50%),
-                radial-gradient(circle at 0% 100%, #3a0000 0%, transparent 40%),
+                radial-gradient(circle at 50% -10%, #800000 0%, transparent 60%),
                 url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-            color: white;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            height: 100vh;
+            color: white; margin: 0; padding: 0; overflow: hidden; height: 100vh;
         }
 
-        /* Эффект маскота на фоне */
+        /* Фоновый дракон */
         body::before {
-            content: "";
-            position: fixed;
-            top: 15%;
-            right: -5%;
-            width: 300px;
-            height: 300px;
+            content: ""; position: fixed; top: 10%; left: -10%; width: 350px; height: 350px;
             background: url('https://cdn-icons-png.flaticon.com/512/528/528101.png') no-repeat center/contain;
-            opacity: 0.15;
-            filter: drop-shadow(0 0 30px var(--dragon-red));
-            z-index: -1;
-            transform: rotate(-15deg);
+            opacity: 0.1; filter: drop-shadow(0 0 40px var(--dragon-red)); z-index: -1; transform: rotate(15deg);
         }
 
         header {
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(15px);
-            padding: 20px;
-            text-align: center;
-            border-bottom: 3px solid var(--dragon-red);
-            box-shadow: 0 5px 30px rgba(255, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.9); padding: 20px; text-align: center;
+            border-bottom: 2px solid var(--dragon-red); box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
         }
 
-        .logo-main {
-            font-weight: 900;
-            font-size: 24px;
-            color: var(--gold);
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
-        }
-
-        .content-area {
-            height: calc(100vh - 160px);
-            overflow-y: auto;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .page { display: none; animation: zoomIn 0.3s ease-out; }
+        .content-area { height: calc(100vh - 160px); overflow-y: auto; padding: 15px; box-sizing: border-box; }
+        .page { display: none; animation: fadeIn 0.3s ease; }
         .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        @keyframes zoomIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        /* Стили аккордеона */
+        .acc-item { background: var(--card-glass); border: 1px solid var(--border-gold); border-radius: 15px; margin-bottom: 12px; overflow: hidden; }
+        .acc-head { padding: 18px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 800; font-size: 14px; text-transform: uppercase; }
+        .acc-body { display: none; padding: 15px; background: rgba(0,0,0,0.4); border-top: 1px solid var(--border-gold); font-size: 13px; line-height: 1.6; color: #ccc; }
+        .acc-body.open { display: block; }
+        .acc-head span.arrow { transition: 0.3s; color: var(--gold); }
 
-        .card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-            position: relative;
-            overflow: hidden;
-        }
+        /* Plinko Live Session */
+        .live-session { background: rgba(0,0,0,0.6); border-radius: 15px; padding: 10px; margin-top: 20px; border: 1px dashed var(--dragon-red); }
+        .ball-history { display: flex; justify-content: center; gap: 8px; margin-top: 10px; }
+        .ball { width: 35px; height: 35px; background: var(--dragon-red); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; color: white; box-shadow: 0 0 10px var(--dragon-red); animation: dropBall 2s infinite; }
+        @keyframes dropBall { 0% { opacity: 0; transform: translateY(-20px); } 50% { opacity: 1; } 100% { opacity: 0; transform: translateY(20px); } }
 
-        .card::after {
-            content: "";
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.03), transparent);
-            transform: rotate(45deg);
-            animation: shine 4s infinite;
-        }
-
-        @keyframes shine { 0% { left: -150%; } 100% { left: 150%; } }
-
-        /* Калькулятор */
-        .input-group { margin-top: 15px; }
-        .input-main {
-            width: 100%;
-            background: rgba(0,0,0,0.5);
-            border: 2px solid var(--dragon-red);
-            border-radius: 12px;
-            padding: 15px;
-            color: white;
-            font-weight: 700;
-            font-size: 18px;
-            text-align: center;
-            box-sizing: border-box;
-        }
-
-        .result-box {
-            margin-top: 15px;
-            background: linear-gradient(90deg, #00ff6611, #00ff6633);
-            border: 1px solid #00ff66;
-            padding: 15px;
-            border-radius: 12px;
-            font-weight: 800;
-            text-align: center;
-        }
-
-        /* Кнопки навигации */
-        nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background: rgba(10, 10, 10, 0.95);
-            display: flex;
-            padding: 15px 0 30px 0;
-            border-top: 2px solid #222;
-            backdrop-filter: blur(20px);
-        }
-
-        .nav-btn {
-            flex: 1;
-            text-align: center;
-            color: #555;
-            font-size: 9px;
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-
+        /* Nav */
+        nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; padding: 12px 0 30px 0; border-top: 2px solid #222; }
+        .nav-btn { flex: 1; text-align: center; color: #444; font-size: 9px; font-weight: 800; text-transform: uppercase; }
         .nav-btn.active { color: var(--gold); }
-        .nav-btn svg { display: block; margin: 0 auto 5px; width: 22px; height: 22px; }
+        .nav-btn svg { display: block; margin: 0 auto 5px; width: 20px; height: 20px; }
 
-        .btn-play {
-            display: block;
-            background: linear-gradient(180deg, #FF4500 0%, #B22222 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            font-weight: 900;
-            text-decoration: none;
-            box-shadow: 0 0 20px rgba(255, 69, 0, 0.5);
-            text-transform: uppercase;
-            font-size: 18px;
-        }
-
-        .slot-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        /* Онбординг */
-        #onboarding {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--deep-dark);
-            background-image: radial-gradient(circle at center, #800000 0%, #000 100%);
-            z-index: 5000;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 40px; text-align: center; box-sizing: border-box;
-        }
+        .play-btn { display: block; background: linear-gradient(180deg, #FF0000 0%, #800000 100%); color: white; padding: 18px; border-radius: 15px; text-align: center; font-weight: 900; text-decoration: none; font-size: 16px; margin-top: 15px; box-shadow: 0 0 20px rgba(255, 0, 0, 0.4); }
     </style>
 </head>
 <body>
 
-    <div id="onboarding">
-        <img src="https://cdn-icons-png.flaticon.com/512/528/528101.png" style="width:120px; filter: drop-shadow(0 0 20px red);">
-        <h1 style="color:var(--gold); margin:20px 0 10px 0; font-size:28px;">DRAGON INSIDE</h1>
-        <p style="color:#ccc;">Инсайдерский софт от бывших разработчиков платформы.</p>
-        <button onclick="document.getElementById('onboarding').style.display='none'; tg.expand();" style="margin-top:40px; width:100%; padding:20px; background:var(--gold); color:black; border:none; border-radius:15px; font-weight:900; text-transform:uppercase;">Начать заработок</button>
-    </div>
-
-    <header><div class="logo-main">DRAGON MONEY</div></header>
+    <header><div style="font-weight:900; color:var(--gold); letter-spacing:4px;">DRAGON INSIDE PRO</div></header>
 
     <div class="content-area">
         
         <div id="signals" class="page active">
-            <div class="card" style="text-align:center; border: 2px solid var(--dragon-red);">
-                <div style="font-size:10px; color:var(--gold); letter-spacing:2px;">AI PLINKO SCANNER v13.0</div>
-                <div id="sig" style="font-size:60px; font-weight:900; margin:10px 0;">x24.5</div>
-                <div style="color:#00ff66; font-size:12px; font-weight:bold;">● ВЫСОКАЯ ВЕРОЯТНОСТЬ</div>
-            </div>
-            <a href="https://dg1.to/fpb5ialfu" class="btn-play">ИГРАТЬ (БОНУС ДО 1000₽)</a>
-        </div>
-
-        <div id="top-games" class="page">
-            <h2 style="color:var(--gold);">🔥 ТОП-5 СЛОТОВ</h2>
-            <div class="card">
-                <div class="slot-row"><b>1. Gates of Olympus</b><span style="color:#00ff66;">RTP 96.5%</span></div>
-                <p style="font-size:12px; color:#aaa;">Высокая волатильность. Ставка 2% от банка. Лучше играть длинными сессиями.</p>
-                <div class="slot-row"><b>2. Sweet Bonanza</b><span style="color:#00ff66;">RTP 96.4%</span></div>
-                <p style="font-size:12px; color:#aaa;">Средняя волатильность. Идеально для бонусов.</p>
-                <div class="slot-row"><b>3. Plinko (Dragon)</b><span style="color:#00ff66;">RTP 98.2%</span></div>
-                <p style="font-size:12px; color:#aaa;">Максимальный профит. Использовать только с нашими сигналами.</p>
-            </div>
-        </div>
-
-        <div id="calc-bank" class="page">
-            <h2 style="color:var(--gold);">💰 РАСПРЕДЕЛЕНИЕ БАНКА</h2>
-            <div class="card">
-                <p style="font-size:13px;">Введите ваш баланс, чтобы рассчитать безопасную ставку (2%):</p>
-                <div class="input-group">
-                    <input type="number" id="balance" class="input-main" placeholder="Сумма в рублях" oninput="calculate()">
+            <div style="background:radial-gradient(circle, #2a0000 0%, #000 100%); border: 2px solid var(--dragon-red); border-radius: 20px; padding: 30px; text-align: center;">
+                <div style="font-size:10px; color:var(--gold); letter-spacing:2px; margin-bottom:10px;">LIVE AI PREDICTOR</div>
+                <div id="sig" style="font-size:55px; font-weight:900; text-shadow: 0 0 20px red;">x14.5</div>
+                <div class="live-session">
+                    <div style="font-size:9px; color:#777;">LIVE SESSION HISTORY</div>
+                    <div class="ball-history">
+                        <div class="ball" style="animation-delay: 0s;">x2.1</div>
+                        <div class="ball" style="animation-delay: 0.5s;">x14</div>
+                        <div class="ball" style="animation-delay: 1s;">x5.2</div>
+                        <div class="ball" style="animation-delay: 1.5s;">x24</div>
+                    </div>
                 </div>
-                <div id="res" class="result-box" style="display:none;">
-                    Безопасная ставка: <span id="bet" style="font-size:24px; color:white;">0</span> ₽
+            </div>
+            <a href="https://dg1.to/fpb5ialfu" class="play-btn">ИГРАТЬ НА DRAGON MONEY</a>
+            <div style="text-align:center; color:var(--gold); font-weight:800; margin-top:15px; font-size:13px;">БОНУС: ДО 1000₽ НА ДЕПОЗИТ 🧧</div>
+        </div>
+
+        <div id="top-slots" class="page">
+            <h2 style="color:var(--gold); font-size:18px;">🔥 ТОП ВЫДАЮЩИХСЯ СЛОТОВ</h2>
+            
+            <div class="acc-item">
+                <div class="acc-head" onclick="tgl(this)"><span>1. GATES OF OLYMPUS</span><span class="arrow">▼</span></div>
+                <div class="acc-body">
+                    <b>RTP:</b> 96.5% | <b>Волатильность:</b> High<br><br>
+                    <b>Стратегия:</b> Ставка 0.5% от банка. Слот имеет накопительный эффект. Если за 40 спинов не было функции "Multiplier", увеличивайте ставку на 20%. Идеально для ловли x500.
+                </div>
+            </div>
+
+            <div class="acc-item">
+                <div class="acc-head" onclick="tgl(this)"><span>2. SWEET BONANZA</span><span class="arrow">▼</span></div>
+                <div class="acc-body">
+                    <b>RTP:</b> 96.48% | <b>Волатильность:</b> Med-High<br><br>
+                    <b>Стратегия:</b> Отключение функции "Ante Bet" повышает шанс выпадения крупных символов. Рекомендуется играть сессиями по 30 минут с перерывами.
+                </div>
+            </div>
+
+            <div class="acc-item">
+                <div class="acc-head" onclick="tgl(this)"><span>3. SUGAR RUSH</span><span class="arrow">▼</span></div>
+                <div class="acc-body">
+                    <b>RTP:</b> 96.5% | <b>Волатильность:</b> Very High<br><br>
+                    <b>Стратегия:</b> Ставка на "Multiplier Spots". Слот выдает сериями. Если пошли иксы — не выходите из игры еще 10 спинов, цикл отдачи продолжается.
+                </div>
+            </div>
+
+            <div class="acc-item">
+                <div class="acc-head" onclick="tgl(this)"><span>4. ZEUS VS HADES</span><span class="arrow">▼</span></div>
+                <div class="acc-body">
+                    <b>RTP:</b> 96.07% | <b>Волатильность:</b> Extreme<br><br>
+                    <b>Стратегия:</b> Выбирайте режим "Hades" только при наличии банка на 200+ ставок. Самые крупные иксы (x15,000) заложены именно здесь.
+                </div>
+            </div>
+
+            <div class="acc-item">
+                <div class="acc-head" onclick="tgl(this)"><span>5. THE DOG HOUSE</span><span class="arrow">▼</span></div>
+                <div class="acc-body">
+                    <b>RTP:</b> 96.51% | <b>Волатильность:</b> High<br><br>
+                    <b>Стратегия:</b> Старая школа. Идеален для "догона". Если в бонуске выпал "Sticky Wild" на 2-м барабане, вероятность крупного заноса повышается на 70%.
                 </div>
             </div>
         </div>
 
         <div id="guides" class="page">
-            <h2 style="color:var(--gold);">📒 ИНСТРУКЦИИ</h2>
-            <div class="card">
-                <b style="color:var(--gold);">Как пополнить?</b>
-                <p style="font-size:13px;">Перейдите в "Кассу", выберите метод (Карта или Крипта). За пополнение в Крипте начисляется +5% без вейджера!</p>
+            <h2 style="color:var(--gold); font-size:18px;">📒 БАЗА ЗНАНИЙ</h2>
+
+            <div class="acc-item">
+                <div class="acc-head" onclick="tgl(this)"><span>📥 КАК ПОПОЛНИТЬ?</span><span class="arrow">▼</span></div>
+                <div class="acc-body">
+                    1. Зайдите в раздел "Касса".<br>
+                    2. Выберите способ (Карта или Крипта).<br>
+                    3. За пополнение в <b>Криптовалюте</b> (LTC/USDT) вы автоматически получаете <b>+5% к депозиту</b>. Этот бонус не нужно отыгрывать (Wager 0) при игре в Plinko!
+                </div>
             </div>
-            <div class="card">
-                <b style="color:var(--gold);">Как вывести?</b>
-                <p style="font-size:13px;">Минимальный вывод от 100₽. Среднее время вывода на карту — 15-30 минут.</p>
+
+            <div class="acc-item">
+                <div class="acc-head" onclick="tgl(this)"><span>📤 КАК ВЫВЕСТИ?</span><span class="arrow">▼</span></div>
+                <div class="acc-body">
+                    - Минимальный вывод: 100₽.<br>
+                    - На банковские карты: 15-60 минут.<br>
+                    - На Крипто-кошельки: 5-15 минут.<br>
+                    Перед выводом убедитесь, что сумма ставок превышает сумму депозита (правило 1x).
+                </div>
             </div>
-            <div class="card">
-                <b style="color:var(--gold);">VPN для Dragon Money</b>
-                <p style="font-size:13px;">Если сайт недоступен, используйте <a href="https://t.me/routuber_bot?start=ref1355298240" style="color:var(--gold);">этот VPN</a>. Оплаченная подписка уже активна.</p>
+
+            <div class="acc-item">
+                <div class="acc-head" onclick="tgl(this)"><span>🌐 РАБОЧИЙ VPN</span><span class="arrow">▼</span></div>
+                <div class="acc-body">
+                    Используйте <a href="https://t.me/routuber_bot?start=ref1355298240" style="color:var(--gold);">этот VPN</a>. <br>
+                    1. Установите приложение.<br>
+                    2. Вставьте ссылку: <code>https://s.routuber.tv/sub/3kQ6gDg_gjAWnchKJTtYWnTPG</code><br>
+                    Это обеспечит стабильный пинг и доступ ко всем слотам.
+                </div>
+            </div>
+        </div>
+
+        <div id="bank" class="page">
+            <h2 style="color:var(--gold); font-size:18px;">💰 КАЛЬКУЛЯТОР 2%</h2>
+            <div style="background:var(--card-glass); padding:20px; border-radius:20px; border:1px solid var(--border-gold);">
+                <p style="font-size:12px;">Введите ваш баланс (₽):</p>
+                <input type="number" id="balInput" style="width:100%; padding:15px; background:#000; border:1px solid var(--dragon-red); color:#fff; font-size:20px; border-radius:10px; box-sizing:border-box;" oninput="calc()">
+                <div id="resBox" style="margin-top:20px; display:none; text-align:center;">
+                    <div style="font-size:11px; color:#777;">ВАША БЕЗОПАСНАЯ СТАВКА</div>
+                    <div id="idealBet" style="font-size:32px; font-weight:900; color:var(--gold);">0 ₽</div>
+                </div>
             </div>
         </div>
 
@@ -247,10 +182,10 @@
         <div class="nav-btn active" onclick="showP('signals', this)">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Сигналы
         </div>
-        <div class="nav-btn" onclick="showP('top-games', this)">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>Топ Игр
+        <div class="nav-btn" onclick="showP('top-slots', this)">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>Слоты
         </div>
-        <div class="nav-btn" onclick="showP('calc-bank', this)">
+        <div class="nav-btn" onclick="showP('bank', this)">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-2h2v2zm3.3-6.4c-.4.4-.7.9-.7 1.4h-2c0-1 .4-1.8 1.1-2.4l1.2-1.2c.4-.4.6-.9.6-1.4 0-1.1-.9-2-2-2s-2 .9-2 2h-2c0-2.2 1.8-4 4-4s4 1.8 4 4c0 .9-.3 1.8-1 2.4l-1.2 1.2z"/></svg>Банк
         </div>
         <div class="nav-btn" onclick="showP('guides', this)">
@@ -270,20 +205,30 @@
             tg.HapticFeedback.impactOccurred('medium');
         }
 
-        function calculate() {
-            const b = document.getElementById('balance').value;
-            if(b > 0) {
-                document.getElementById('res').style.display = 'block';
-                document.getElementById('bet').innerText = Math.floor(b * 0.02);
-            } else {
-                document.getElementById('res').style.display = 'none';
-            }
+        function tgl(el) {
+            const body = el.nextElementSibling;
+            body.classList.toggle('open');
+            el.querySelector('.arrow').innerText = body.classList.contains('open') ? '▲' : '▼';
+            tg.HapticFeedback.selectionChanged();
         }
 
-        const vals = ["x14.0", "x24.2", "x5.0", "x38.1", "x1.5", "x11.0"];
+        function calc() {
+            const b = document.getElementById('balInput').value;
+            if(b > 0) {
+                document.getElementById('resBox').style.display = 'block';
+                document.getElementById('idealBet').innerText = Math.floor(b * 0.02) + ' ₽';
+            } else { document.getElementById('resBox').style.display = 'none'; }
+        }
+
+        // Симуляция Live Session
+        const hVal = ["x2.1", "x14", "x5.2", "x24", "x1.5", "x88"];
         setInterval(() => {
-            document.getElementById('sig').innerText = vals[Math.floor(Math.random()*vals.length)];
-        }, 8000);
+            const balls = document.querySelectorAll('.ball');
+            balls.forEach(ball => {
+                ball.innerText = hVal[Math.floor(Math.random()*hVal.length)];
+            });
+            document.getElementById('sig').innerText = hVal[Math.floor(Math.random()*hVal.length)];
+        }, 3000);
     </script>
 </body>
 </html>
