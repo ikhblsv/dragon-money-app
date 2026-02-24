@@ -3,142 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dragon Money Pro Hub</title>
+    <title>Dragon Money Inside PRO</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #FFD700; --red: #E60000; --bg: #050505; --card: rgba(255,255,255,0.05); }
+        :root { --gold: #FFD700; --red: #ff0000; --bg: #050505; --card: rgba(255,255,255,0.07); }
         
         body {
-            font-family: 'Montserrat', sans-serif;
-            background: var(--bg);
-            background-image: radial-gradient(circle at 50% -10%, #800000 0%, transparent 60%);
-            color: white; margin: 0; padding: 0; overflow-x: hidden; height: 100vh;
+            font-family: 'Montserrat', sans-serif; background: var(--bg); color: white; margin: 0; padding: 0; overflow: hidden; height: 100vh;
+            background-image: radial-gradient(circle at 50% -20%, #7a0000 0%, transparent 60%);
         }
 
-        /* АНИМИРОВАННЫЙ ДРАКОН НА ФОНЕ */
-        .flying-dragon {
-            position: fixed; top: 20%; left: -100px; width: 80px; height: 80px;
-            background: url('https://cdn-icons-png.flaticon.com/512/528/528101.png') no-repeat center/contain;
-            filter: drop-shadow(0 0 10px var(--red)); opacity: 0.3; z-index: -1;
-            animation: dragonFlight 15s linear infinite;
+        /* АНИМАЦИЯ ФОНОВОГО ДРАКОНА */
+        .bg-dragon {
+            position: fixed; top: 15%; right: -50px; width: 300px; height: 300px;
+            background: url('https://i.ibb.co/528101/dragon-icon.png') no-repeat center/contain;
+            opacity: 0.1; filter: drop-shadow(0 0 30px var(--red)); z-index: -1; animation: float 10s infinite ease-in-out;
         }
-        @keyframes dragonFlight {
-            0% { left: -100px; top: 20%; transform: rotate(10deg); }
-            50% { left: 110%; top: 40%; transform: rotate(-10deg); }
-            100% { left: -100px; top: 20%; }
-        }
+        @keyframes float { 0%, 100% { transform: translateY(0) rotate(-10deg); } 50% { transform: translateY(-30px) rotate(5deg); } }
 
-        .app-container { max-width: 500px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; }
-        header { background: rgba(0,0,0,0.9); padding: 15px; text-align: center; border-bottom: 2px solid var(--red); box-shadow: 0 0 30px var(--red); }
-        .content-area { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 120px; }
+        .app-container { max-width: 500px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; position: relative; }
         
-        .page { display: none; }
-        .page.active { display: block; animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* МЕРЦАЮЩИЕ КНОПКИ */
-        .btn {
-            display: block; padding: 20px; border-radius: 15px; text-align: center; 
-            font-weight: 900; text-decoration: none; text-transform: uppercase; border: none; cursor: pointer;
-            animation: glow 2s infinite; margin-top: 15px;
+        /* ОНБОРДИНГ */
+        #onboarding {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg);
+            z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; box-sizing: border-box;
         }
-        .btn-red { background: linear-gradient(180deg, #FF0000 0%, #800000 100%); color: white; }
-        .btn-gold { background: linear-gradient(180deg, var(--gold) 0%, #b8860b 100%); color: black; box-shadow: 0 0 15px var(--gold); }
-        @keyframes glow { 0% { box-shadow: 0 0 5px rgba(255,0,0,0.4); } 50% { box-shadow: 0 0 25px rgba(255,0,0,0.8); } 100% { box-shadow: 0 0 5px rgba(255,0,0,0.4); } }
+        .anon-avatar { width: 130px; height: 130px; border-radius: 50%; border: 3px solid var(--red); box-shadow: 0 0 30px var(--red); margin-bottom: 20px; background: url('https://img.freepik.com/free-photo/view-3d-hacker-rear_23-2150793132.jpg') center/cover; }
 
-        /* Сигналы */
-        .sig-box { background: #000; border: 2px solid var(--red); border-radius: 20px; padding: 30px; text-align: center; }
-        .sig-value { font-size: 60px; font-weight: 900; color: white; text-shadow: 0 0 20px red; margin: 10px 0; }
+        header { background: rgba(0,0,0,0.9); padding: 15px; border-bottom: 2px solid var(--red); text-align: center; box-shadow: 0 0 20px rgba(255,0,0,0.5); }
+        .logo { font-weight: 900; color: var(--gold); letter-spacing: 5px; text-transform: uppercase; }
 
-        /* Картинки */
-        .section-img { width: 100%; border-radius: 10px; margin-bottom: 10px; display: block; background: #111; min-height: 150px; }
+        .content-area { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 110px; }
+        .page { display: none; animation: slideIn 0.3s ease; }
+        .page.active { display: block; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .acc-item { background: var(--card); border: 1px solid var(--border-gold); border-radius: 15px; margin-bottom: 12px; }
-        .acc-head { padding: 15px; display: flex; justify-content: space-between; font-weight: 800; cursor: pointer; }
-        .acc-body { display: none; padding: 15px; border-top: 1px solid #333; }
-        .acc-body.open { display: block; }
+        /* КАРТОЧКИ И КНОПКИ */
+        .card { background: var(--card); border: 1px solid rgba(255,215,0,0.1); border-radius: 20px; padding: 20px; margin-bottom: 15px; backdrop-filter: blur(10px); }
+        .btn-main { 
+            background: linear-gradient(180deg, #ff0000 0%, #800000 100%); color: white; padding: 20px; border-radius: 15px; 
+            text-align: center; font-weight: 900; display: block; text-decoration: none; margin-top: 15px; 
+            box-shadow: 0 0 20px rgba(255,0,0,0.5); text-transform: uppercase; animation: pulse 2s infinite; border: none; width: 100%; cursor: pointer;
+        }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
 
-        /* Навигация */
-        nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #000; display: flex; padding: 15px 0 30px 0; border-top: 1px solid #222; }
-        .nav-btn { flex: 1; text-align: center; color: #555; font-size: 9px; font-weight: 800; cursor: pointer; }
-        .nav-btn.active { color: var(--gold); }
-        .nav-btn svg { display: block; margin: 0 auto 5px; width: 22px; height: 22px; }
+        /* АККОРДЕОН */
+        .acc-item { background: rgba(0,0,0,0.3); border-radius: 15px; margin-bottom: 10px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+        .acc-head { padding: 15px; display: flex; justify-content: space-between; font-weight: 800; cursor: pointer; font-size: 13px; color: var(--gold); }
+        .acc-body { display: none; padding: 0 0 15px 0; background: rgba(0,0,0,0.5); }
+        .acc-body img { width: 100%; height: auto; max-height: 200px; object-fit: cover; margin-bottom: 10px; }
+        .acc-body p { padding: 0 15px; font-size: 13px; line-height: 1.5; color: #ccc; }
+
+        /* ТАБ БАР */
+        nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #000; display: flex; padding: 10px 0 25px 0; border-top: 1px solid #222; }
+        .nav-item { flex: 1; text-align: center; color: #444; font-size: 9px; font-weight: 800; cursor: pointer; }
+        .nav-item.active { color: var(--gold); }
+        .nav-item svg { display: block; margin: 0 auto 4px; width: 22px; height: 22px; }
+
+        /* ГРАФИК ВОЛАТИЛЬНОСТИ */
+        .wave-container { height: 40px; display: flex; align-items: flex-end; gap: 3px; justify-content: center; margin-bottom: 10px; }
+        .bar { width: 4px; background: var(--red); animation: wave 1s infinite alternate; }
+        @keyframes wave { from { height: 5px; } to { height: 35px; } }
     </style>
 </head>
 <body>
 
-<div class="flying-dragon"></div>
+<div id="onboarding">
+    <div class="anon-avatar"></div>
+    <h2 style="color:var(--gold); margin-bottom:5px;">Ex-Team Dragon Money</h2>
+    <p style="color:#777; font-size:12px; margin-bottom:20px;">Закрытый софт от разработчиков</p>
+    <div class="card" style="font-size:14px;">
+        Мы объединили алгоритмы Плинко и Слотов в один мощный анализатор. <b>Готов увидеть правду?</b>
+    </div>
+    <button class="btn-main" onclick="closeOnb()">ПОЛУЧИТЬ ДОСТУП</button>
+</div>
+
+<div class="bg-dragon"></div>
 
 <div class="app-container">
-    <header><div style="font-weight:900; color:var(--gold); letter-spacing:4px;">DRAGON INSIDE PRO</div></header>
+    <header><div class="logo">DRAGON INSIDE PRO</div></header>
 
     <div class="content-area">
+        
         <div id="signals" class="page active">
-            <div class="sig-box">
-                <div style="font-size:10px; color:var(--gold);">PLINKO AI PREDICTOR</div>
-                <div id="sigDisplay" class="sig-value">x1.0</div>
-                <button class="btn btn-red" onclick="generateSignal()">ПОЛУЧИТЬ СИГНАЛ</button>
+            <div style="font-size:10px; color:#00ff66; margin-bottom:10px; font-weight:900;">● ОНЛАЙН: <span id="onlineCount">482</span></div>
+            <div class="card" style="text-align:center; border: 2px solid var(--red);">
+                <div class="wave-container" id="wave"></div>
+                <div style="font-size:10px; color:var(--gold); letter-spacing:2px;">SCANNING PLINKO SEED...</div>
+                <div id="sigVal" style="font-size:60px; font-weight:900; margin:10px 0; text-shadow: 0 0 20px red;">x1.0</div>
+                <button class="btn-main" style="margin-top:0;" onclick="getSignal(this)">ПОЛУЧИТЬ СИГНАЛ</button>
             </div>
             
-            <a href="https://dg1.to/fpb5ialfu" class="btn btn-gold">ИГРАТЬ В DRAGON MONEY</a>
+            <a href="https://dg1.to/fpb5ialfu" class="btn-main" style="background:var(--gold); color:black; animation:none; box-shadow:0 0 20px var(--gold);">ИГРАТЬ (БОНУС +1000₽)</a>
+            
+            <div id="winTicker" style="text-align:center; font-size:11px; color:var(--gold); margin-top:15px; font-weight:700;">Юзер ***7291 поднял 14,400₽ в Plinko!</div>
 
-            <div class="acc-item" style="margin-top: 20px; border-color: var(--gold);">
-                <div class="acc-head" style="color: var(--gold);">🧧 ВАШ ПРОМОКОД</div>
-                <div class="acc-body open" style="text-align: center;">
-                    <h2 style="margin:0; font-size:30px;">BONUSDROP</h2>
-                    <p style="font-size:12px;">Дает рандомно <b>до 1000₽ на баланс</b> (от 5₽ до 1000₽). Вводить в разделе "Бонусы" на сайте.</p>
+            <div class="card" style="margin-top:20px; border: 1px dashed var(--gold); text-align:center;">
+                <span style="font-size:10px; color:#777;">ПРОМОКОД НА БОНУС:</span>
+                <div style="font-size:24px; font-weight:900; letter-spacing:3px;">BONUSDROP</div>
+            </div>
+        </div>
+
+        <div id="top-slots" class="page">
+            <h2 style="color:var(--gold); font-size:18px;">🔥 ГОРЯЧИЕ СЛОТЫ (HOT)</h2>
+            <div class="acc-item">
+                <div class="acc-head" onclick="tgl(this)"><span>GATES OF OLYMPUS</span><span>▼</span></div>
+                <div class="acc-body">
+                    <img src="https://the-dog-house.com/wp-content/uploads/2023/11/gates-of-olympus-slot.webp">
+                    <p><b>RTP: 96.5%</b>. Алгоритм зафиксировал цикл отдачи x500. Рекомендуется покупка бонуса.</p>
+                </div>
+            </div>
+            <div class="acc-item">
+                <div class="acc-head" onclick="tgl(this)"><span>SWEET BONANZA</span><span>▼</span></div>
+                <div class="acc-body">
+                    <img src="https://static.casino.guru/pict/85257/Sweet-Bonanza.png?width=838">
+                    <p><b>RTP: 96.4%</b>. Лучший выбор для отыгрыша вагера. Ставьте 1% от банка.</p>
+                </div>
+            </div>
+            <div class="acc-item">
+                <div class="acc-head" onclick="tgl(this)"><span>ZEUS VS HADES</span><span>▼</span></div>
+                <div class="acc-body">
+                    <img src="https://static.casino.guru/pict/463617/Zeus-vs-Hades---Gods-of-War.png?width=838">
+                    <p><b>Extreme Volatility</b>. Режим Hades. Вероятность заноса x15,000 повышена на 12%.</p>
                 </div>
             </div>
         </div>
 
-        <div id="slots" class="page">
-            <h2 style="color:var(--gold);">🔥 ТОП СЛОТОВ</h2>
-            <div class="acc-item">
-                <div class="acc-head" onclick="tgl(this)">GATES OF OLYMPUS</div>
-                <div class="acc-body">
-                    <img class="section-img" src="https://i.ibb.co/680LzD1/gates.jpg">
-                    <p>RTP: 96.5%. Режим: 16 рядов. Сигналы залетают сериями.</p>
-                </div>
-            </div>
-            <div class="acc-item">
-                <div class="acc-head" onclick="tgl(this)">SWEET BONANZA</div>
-                <div class="acc-body">
-                    <img class="section-img" src="https://i.ibb.co/VvzB3b4/bonanza.jpg">
-                    <p>Идеально для разгона мелкого депа.</p>
+        <div id="bank" class="page">
+            <h2 style="color:var(--gold); font-size:18px;">💰 КАЛЬКУЛЯТОР ВЫЖИВАЕМОСТИ</h2>
+            <div class="card">
+                <p style="font-size:12px; color:#aaa;">Введите баланс в рублях:</p>
+                <input type="number" id="balInp" placeholder="Напр. 5000" style="width:100%; padding:15px; background:#000; border:1px solid var(--red); color:#fff; font-size:20px; border-radius:12px; box-sizing:border-box;" oninput="calc()">
+                <div id="resBox" style="display:none; margin-top:15px; text-align:center;">
+                    <div style="font-size:11px; color:#777;">БЕЗОПАСНАЯ СТАВКА (2%):</div>
+                    <div id="resVal" style="font-size:32px; font-weight:900; color:var(--gold);">0 ₽</div>
+                    <div style="background:rgba(0,255,102,0.1); color:#00ff66; padding:10px; border-radius:10px; font-size:11px; margin-top:10px;">Прогноз: 150+ спинов без риска обнуления</div>
                 </div>
             </div>
         </div>
 
         <div id="guides" class="page">
-            <h2 style="color:var(--gold);">📒 ГАЙДЫ</h2>
+            <h2 style="color:var(--gold); font-size:18px;">📒 БАЗА ЗНАНИЙ</h2>
             <div class="acc-item">
-                <div class="acc-head" onclick="tgl(this)">ПОПОЛНЕНИЕ</div>
+                <div class="acc-head" onclick="tgl(this)"><span>ИНСТРУКЦИЯ VPN</span><span>▼</span></div>
                 <div class="acc-body">
-                    <img class="section-img" src="https://i.ibb.co/GdrV3Xh/dep.jpg">
-                    <p>Крипта = +5% к депу без вейджера.</p>
+                    <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?width=800">
+                    <p>1. Открой <a href="https://t.me/routuber_bot?start=ref1355298240" style="color:var(--gold);">VPN Бот</a>.<br>2. Нажми "+".<br>3. <b>Вставьте Ключ:</b> <code>https://s.routuber.tv/sub/3kQ6gDg_gjAWnchKJTtYWnTPG</code></p>
                 </div>
             </div>
             <div class="acc-item">
-                <div class="acc-head" onclick="tgl(this)">ВЫВОД</div>
+                <div class="acc-head" onclick="tgl(this)"><span>ДЕПОЗИТ И ВЫВОД</span><span>▼</span></div>
                 <div class="acc-body">
-                    <img class="section-img" src="https://i.ibb.co/8Ym7H8m/out.jpg">
-                    <p>Мин. вывод 100₽. На крипту 15 мин.</p>
+                    <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?width=800">
+                    <p>Пополняй через Крипту для бонуса +5% без вейджера. Вывод на карту от 100р за 30 минут.</p>
                 </div>
             </div>
         </div>
+
     </div>
 
     <nav>
-        <div class="nav-btn active" onclick="showP('signals', this)">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>СИГНАЛЫ
-        </div>
-        <div class="nav-btn" onclick="showP('slots', this)">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>СЛОТЫ
-        </div>
-        <div class="nav-btn" onclick="showP('guides', this)">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>ГАЙДЫ
-        </div>
+        <div class="nav-item active" onclick="pg('signals', this)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>СИГНАЛЫ</div>
+        <div class="nav-item" onclick="pg('top-slots', this)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>СЛОТЫ</div>
+        <div class="nav-item" onclick="pg('bank', this)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-2h2v2zm3.3-6.4c-.4.4-.7.9-.7 1.4h-2c0-1 .4-1.8 1.1-2.4l1.2-1.2c.4-.4.6-.9.6-1.4 0-1.1-.9-2-2-2s-2 .9-2 2h-2c0-2.2 1.8-4 4-4s4 1.8 4 4c0 .9-.3 1.8-1 2.4l-1.2 1.2z"/></svg>БАНК</div>
+        <div class="nav-item" onclick="pg('guides', this)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>ГАЙДЫ</div>
     </nav>
 </div>
 
@@ -146,34 +175,52 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    function showP(id, el) {
+    function closeOnb() { document.getElementById('onboarding').style.display='none'; tg.HapticFeedback.impactOccurred('heavy'); }
+
+    function pg(id, el) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
         el.classList.add('active');
-        tg.HapticFeedback.impactOccurred('medium');
+        tg.HapticFeedback.impactOccurred('light');
     }
 
     function tgl(el) {
-        const b = el.nextElementSibling;
-        b.classList.toggle('open');
+        const body = el.nextElementSibling;
+        const isOpen = body.style.display === 'block';
+        document.querySelectorAll('.acc-body').forEach(b => b.style.display = 'none');
+        body.style.display = isOpen ? 'none' : 'block';
         tg.HapticFeedback.selectionChanged();
     }
 
-    function generateSignal() {
-        const btn = event.target;
-        btn.innerText = "АНАЛИЗ...";
-        btn.disabled = true;
-        tg.HapticFeedback.impactOccurred('heavy');
-        
+    function getSignal(btn) {
+        btn.innerText = "АНАЛИЗ СИДОВ..."; btn.disabled = true;
+        tg.HapticFeedback.impactOccurred('medium');
         setTimeout(() => {
-            const vals = ["x14.0", "x22.5", "x5.0", "x41.0", "x1.5", "x88.0"];
-            document.getElementById('sigDisplay').innerText = vals[Math.floor(Math.random()*vals.length)];
-            btn.innerText = "ПОЛУЧИТЬ СИГНАЛ";
-            btn.disabled = false;
+            const v = ["x22.0", "x5.5", "x14.0", "x1.2", "x44.0", "x88.1"];
+            document.getElementById('sigVal').innerText = v[Math.floor(Math.random()*v.length)];
+            btn.innerText = "ПОЛУЧИТЬ СИГНАЛ"; btn.disabled = false;
             tg.HapticFeedback.notificationOccurred('success');
         }, 1500);
     }
+
+    function calc() {
+        const v = document.getElementById('balInp').value;
+        if(v > 0) {
+            document.getElementById('resBox').style.display = 'block';
+            document.getElementById('resVal').innerText = Math.floor(v * 0.02) + ' ₽';
+        }
+    }
+
+    // Маркетинг: живой онлайн и лента
+    setInterval(() => { document.getElementById('onlineCount').innerText = 450 + Math.floor(Math.random()*50); }, 5000);
+    const names = ["User729", "Admin", "Lucky_Boy", "Player_X"];
+    const wins = ["14,400", "5,200", "22,000", "1,500"];
+    setInterval(() => { document.getElementById('winTicker').innerText = `Юзер ***${names[Math.floor(Math.random()*4)]} поднял ${wins[Math.floor(Math.random()*4)]}₽ в Plinko!`; }, 6000);
+
+    // График волатильности
+    const wc = document.getElementById('wave');
+    for(let i=0; i<15; i++) { const b = document.createElement('div'); b.className='bar'; b.style.animationDelay = (i*0.1)+'s'; wc.appendChild(b); }
 </script>
 </body>
 </html>
